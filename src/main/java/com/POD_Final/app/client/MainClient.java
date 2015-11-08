@@ -16,7 +16,7 @@ public class MainClient {
 
     }
 
-    private static Query parseQuery(String[] args) {
+    public static Query parseQuery(String[] args) {
         Query query = new Query();
         String[] parts;
         String paramName, paramVal;
