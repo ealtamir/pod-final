@@ -2,7 +2,7 @@ package com.POD_Final.app;
 
 import com.POD_Final.app.client.CustomJSONParser;
 import com.POD_Final.app.client.Movie;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
@@ -33,7 +33,7 @@ public class JSONParserTest {
         int votes = Integer.valueOf("1030777");
         Assert.assertEquals(movie.getVotes(), votes);
         float metascore = Float.valueOf("78");
-        Assert.assertEquals(movie.getMetascore(), metascore);
+        Assert.assertEquals(movie.getMetascore(), metascore, 0.001);
         String[] actors = movie.getActors();
         Assert.assertEquals(actors[0], "Christian Bale");
         Assert.assertEquals(actors[1], "Gary Oldman");

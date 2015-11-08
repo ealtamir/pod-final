@@ -2,7 +2,7 @@ package com.POD_Final.app;
 
 import com.POD_Final.app.client.MainClient;
 import com.POD_Final.app.client.Query;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
