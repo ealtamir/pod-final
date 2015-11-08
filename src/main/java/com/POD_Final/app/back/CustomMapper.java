@@ -1,5 +1,6 @@
-package main.java.com.POD_Final.app.back;
+package com.POD_Final.app.back;
 
+import com.POD_Final.app.client.Movie;
 import com.hazelcast.mapreduce.Context;
 import com.hazelcast.mapreduce.Mapper;
 

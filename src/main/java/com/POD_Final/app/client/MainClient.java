@@ -13,7 +13,6 @@ public class MainClient {
         if (query == null) {
             return;
         }
-
     }
 
     public static Query parseQuery(String[] args) {
@@ -34,5 +33,4 @@ public class MainClient {
         }
         return query;
     }
-
 }

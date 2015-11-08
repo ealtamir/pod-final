@@ -1,4 +1,4 @@
-package main.java.com.POD_Final.app.back;
+package com.POD_Final.app.back;
 
 /* Helper for the 4th query */
 public class DirectorActorTuple {

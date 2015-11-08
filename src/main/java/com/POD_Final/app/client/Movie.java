@@ -5,7 +5,6 @@ package com.POD_Final.app.client;
  */
 public class Movie {
 
-
     static enum Type {
         MOVIE, SERIES
     };
