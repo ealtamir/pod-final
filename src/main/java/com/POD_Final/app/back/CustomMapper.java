@@ -1,4 +1,4 @@
-package back;
+package com.POD_Final.app.back;
 
 import com.hazelcast.mapreduce.Context;
 import com.hazelcast.mapreduce.Mapper;

@@ -1,3 +1,5 @@
+package com.POD_Final.app.client;
+
 /**
  * Created by Enzo on 08.11.15.
  */
@@ -33,6 +35,4 @@ public class MainClient {
         return query;
     }
 
-    static class Query {
-    }
 }
