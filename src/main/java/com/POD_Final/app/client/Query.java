@@ -12,6 +12,22 @@ public class Query {
     private int cantActores;
     private File dataFilePath;
 
+    public int getQueryNum() {
+        return queryNum;
+    }
+
+    public int getTope() {
+        return tope;
+    }
+
+    public int getCantActores() {
+        return cantActores;
+    }
+
+    public File getDataFilePath() {
+        return dataFilePath;
+    }
+
     public void setQueryParam(String paramName, String paramValue) {
         if (paramName.equals("query")) {
             try {
@@ -37,7 +53,7 @@ public class Query {
         } else if (paramName.equals("N")) {
             try {
                 cantActores = Integer.valueOf(paramValue);
-                if (cantActores > 0 && cantActores < 100000) {
+                if (cantActores < 1 || cantActores > 100000) {
                     throw new NumberFormatException();
                 }
             } catch (NumberFormatException e) {
@@ -46,7 +62,7 @@ public class Query {
             }
         } else if (paramName.equals("path")) {
             dataFilePath = new File(paramValue);
-            if (dataFilePath.isFile()) {
+            if (!dataFilePath.isFile()) {
                 System.out.println(String.format("El archivo provisto es inválido: %s", dataFilePath.getPath()));
                 throw new IllegalArgumentException();
             }
