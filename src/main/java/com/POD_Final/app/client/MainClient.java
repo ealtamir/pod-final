@@ -1,10 +1,12 @@
 package com.POD_Final.app.client;
 
+import com.POD_Final.app.back.ActorsReducer;
 import com.POD_Final.app.back.CustomMapper;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientNetworkConfig;
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.core.ICompletableFuture;
 import com.hazelcast.core.IMap;
 import com.hazelcast.mapreduce.Job;
 import com.hazelcast.mapreduce.JobTracker;
@@ -15,7 +17,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.rmi.server.ExportException;
+import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Enzo on 08.11.15.
@@ -34,8 +38,9 @@ public class MainClient {
         }
         HazelcastInstance client = obtainHazelcastClient();
         CustomJSONParser parser = new CustomJSONParser(query.getDataFilePath());
+        IMap<String, Movie> map = null;
         try {
-            IMap<String, Movie> map = parser.parseJSON(client.getMap(MAP_NAME));
+            map = parser.parseJSON(client.getMap(MAP_NAME));
         } catch (IOException e) {
             System.out.println("ERROR: Unable to obtain IMap from Hazelcast.");
             e.printStackTrace();
@@ -46,20 +51,29 @@ public class MainClient {
 
         KeyValueSource<String, Movie> source = KeyValueSource.fromMap(map);
         Job<String, Movie> job = tracker.newJob(source);
-//
-//        ICompletableFuture<Map<String, FormulaTupla>> future = job
-//                .mapper(new CustomMapper())
-//                .reducer(new Reducer_5())
-//                .submit();
-//
-//        // Tomar resultado e Imprimirlo
-//        Map<String, FormulaTupla> rta = future.get();
-//
-//        for (Entry<String, FormulaTupla> e : rta.entrySet())
-//        {
-//            System.out.println(String.format("Distrito %s => Ganador %s",
-//                    e.getKey(), e.getValue() ));
-//        }
+
+        ICompletableFuture<Map<String, Integer>> future = job
+                .mapper(new CustomMapper())
+                .reducer(new ActorsReducer())
+                .submit();
+
+        Map<String, Integer> result = null;
+        try {
+            result = future.get();
+        } catch (InterruptedException e) {
+            System.out.println("ERROR: Task was interrupted. Aborting...");
+            System.exit(1);
+        } catch (ExecutionException e) {
+            System.out.println("ERROR: There was a problem with the execution of your query. Please try again.");
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        for (Map.Entry<String, Integer> e : result.entrySet())
+        {
+            System.out.println(String.format("Actor: %s, votos: %d", e.getKey(), e.getValue() ));
+        }
+        System.exit(0);
     }
 
     private static HazelcastInstance obtainHazelcastClient() {

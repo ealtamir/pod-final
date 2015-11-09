@@ -7,8 +7,6 @@ import com.hazelcast.core.IMap;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.Timestamp;
-import java.sql.Time;
 import java.util.ArrayList;
 
 /**
@@ -25,13 +23,12 @@ public class CustomJSONParser {
     public IMap<String, Movie> parseJSON(IMap<String, Movie> map) throws IOException {
         String field = null;
         Movie movie = null;
-        ArrayList<Movie> movieList = new ArrayList<Movie>();
         JsonFactory jsonFactory = new JsonFactory();
         JsonParser parser = jsonFactory.createJsonParser(jsonFile);
         JsonToken token = parser.nextToken();
-        while (parser.nextToken() != JsonToken.END_ARRAY) {
+        while(parser.nextToken() != JsonToken.END_ARRAY) {
             movie = new Movie();
-            while (parser.nextToken() != JsonToken.END_OBJECT) {
+            while(parser.nextToken() != JsonToken.END_OBJECT) {
                 field = parser.getCurrentName().toLowerCase();
                 parser.nextToken();
                 processField(field, parser, movie);
@@ -42,18 +39,38 @@ public class CustomJSONParser {
         return map;
     }
 
+    public ArrayList<Movie> parseJSON() throws IOException {
+        String field = null;
+        Movie movie = null;
+        ArrayList<Movie> movieList = new ArrayList<Movie>();
+        JsonFactory jsonFactory = new JsonFactory();
+        JsonParser parser = jsonFactory.createJsonParser(jsonFile);
+        JsonToken token = parser.nextToken();
+        while(parser.nextToken() != JsonToken.END_ARRAY) {
+            movie = new Movie();
+            while(parser.nextToken() != JsonToken.END_OBJECT) {
+                field = parser.getCurrentName().toLowerCase();
+                parser.nextToken();
+                processField(field, parser, movie);
+            }
+            movieList.add(movie);
+        }
+        parser.close();
+        return movieList;
+    }
+
     private void processField(String field, JsonParser parser, Movie movie) throws IOException {
 
-        if (field.equals("title")) {
+        if(field.equals("title")) {
             movie.setTitle(parser.getText());
 
-        } else if (field.equals("year")) {
+        } else if(field.equals("year")) {
             String year = parser.getText();
             try {
                 movie.setStartingYear(Integer.valueOf(year));
-            } catch (NumberFormatException e) {
+            } catch(NumberFormatException e) {
                 String[] years = year.split("[^0-9]");
-                if (years.length == 2) {
+                if(years.length == 2) {
                     movie.setStartingYear(Integer.valueOf(years[0]));
                     movie.setEndingYear(Integer.valueOf(years[1]));
                 } else {
@@ -62,28 +79,28 @@ public class CustomJSONParser {
                 }
             }
 
-        } else if (field.equals("metascore")) {
-            if (parser.getText().equals("N/A")) {
+        } else if(field.equals("metascore")) {
+            if(parser.getText().equals("N/A")) {
                 movie.setMetascore(0);
             } else {
                 movie.setMetascore(Float.valueOf(parser.getText()));
             }
 
-        } else if (field.equals("director")) {
+        } else if(field.equals("director")) {
             movie.setDirector(parser.getText());
 
-        } else if (field.equals("imdbvotes")) {
-            if (parser.getText().equals("N/A")) {
+        } else if(field.equals("imdbvotes")) {
+            if(parser.getText().equals("N/A")) {
                 movie.setMetascore(0);
             } else {
                 String formattedString = parser.getText().replace(",".toString(), "");
                 movie.setVotes(Integer.valueOf(formattedString));
             }
 
-        } else if (field.equals("actors")) {
+        } else if(field.equals("actors")) {
             movie.setActors(parser.getText().split(", "));
 
-        } else if (field.equals("type")) {
+        } else if(field.equals("type")) {
             movie.setType(parser.getText());
         }
 
