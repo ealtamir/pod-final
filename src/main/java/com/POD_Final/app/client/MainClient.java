@@ -1,9 +1,14 @@
 package com.POD_Final.app.client;
 
+import com.POD_Final.app.back.CustomMapper;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientNetworkConfig;
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.core.IMap;
+import com.hazelcast.mapreduce.Job;
+import com.hazelcast.mapreduce.JobTracker;
+import com.hazelcast.mapreduce.KeyValueSource;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -20,13 +25,41 @@ public class MainClient {
     static private final int QUERY = 0;
     static private final int VALUE = 1;
 
+    static private final String MAP_NAME = "query1";
+
     public static void main(String[] args) {
         Query query = parseQuery(args);
         if (query == null) {
             return;
         }
         HazelcastInstance client = obtainHazelcastClient();
+        CustomJSONParser parser = new CustomJSONParser(query.getDataFilePath());
+        try {
+            IMap<String, Movie> map = parser.parseJSON(client.getMap(MAP_NAME));
+        } catch (IOException e) {
+            System.out.println("ERROR: Unable to obtain IMap from Hazelcast.");
+            e.printStackTrace();
+            return;
+        }
 
+        JobTracker tracker = client.getJobTracker("default");
+
+        KeyValueSource<String, Movie> source = KeyValueSource.fromMap(map);
+        Job<String, Movie> job = tracker.newJob(source);
+//
+//        ICompletableFuture<Map<String, FormulaTupla>> future = job
+//                .mapper(new CustomMapper())
+//                .reducer(new Reducer_5())
+//                .submit();
+//
+//        // Tomar resultado e Imprimirlo
+//        Map<String, FormulaTupla> rta = future.get();
+//
+//        for (Entry<String, FormulaTupla> e : rta.entrySet())
+//        {
+//            System.out.println(String.format("Distrito %s => Ganador %s",
+//                    e.getKey(), e.getValue() ));
+//        }
     }
 
     private static HazelcastInstance obtainHazelcastClient() {
