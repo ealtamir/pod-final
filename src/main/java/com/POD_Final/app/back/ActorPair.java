@@ -1,20 +1,19 @@
 package com.POD_Final.app.back;
 
-/* Helper for the third query */
+/* Helper for the 3rd query */
 public class ActorPair {
     private String actorName1;
     private String actorName2;
 
     public ActorPair(String actorName1, String actorName2) {
-        this.actorName1 = actorName1;
-        this.actorName2 = actorName2;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = actorName1.hashCode();
-        result = 31 * result + actorName2.hashCode();
-        return result;
+        /* Enforce tuple order for equals() and hashCode() consistency */
+        if(actorName1.compareTo(actorName2) <= 0){
+            this.actorName1 = actorName1;
+            this.actorName2 = actorName2;
+        } else {
+            this.actorName1 = actorName2;
+            this.actorName2 = actorName1;
+        }
     }
 
     @Override
@@ -22,11 +21,18 @@ public class ActorPair {
         if(this == o) return true;
         if(o == null || getClass() != o.getClass()) return false;
 
-        ActorPair other = (ActorPair) o;
-        if(actorName1.equals(other.actorName1) && actorName2.equals(other.actorName2) ||
-                actorName1.equals(other.actorName2) && actorName2.equals(other.actorName1))
-            return true;
+        ActorPair actorPair = (ActorPair) o;
 
-        return false;
+        if(!actorName1.equals(actorPair.actorName1)) return false;
+        if(!actorName2.equals(actorPair.actorName2)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = actorName1.hashCode();
+        result = 31 * result + actorName2.hashCode();
+        return result;
     }
 }
