@@ -4,7 +4,8 @@ import com.POD_Final.app.client.Movie;
 import com.hazelcast.mapreduce.Context;
 import com.hazelcast.mapreduce.Mapper;
 
-public class CustomMapper implements Mapper<String, Movie, String, Integer> {
+/* Mapper for the 1st query */
+public class ActorsMapper implements Mapper<String, Movie, String, Integer> {
     /* inputKey: nombre de la película */
     /* inputValue: Movie */
     /* outputKey: actor name */

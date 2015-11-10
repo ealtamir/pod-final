@@ -20,6 +20,10 @@ public class Movie implements Serializable {
     private int votes = -1;
     private Type type;
 
+    public int getYear() {
+        return startingYear;
+    }
+
     public String getTitle() {
         return title;
     }

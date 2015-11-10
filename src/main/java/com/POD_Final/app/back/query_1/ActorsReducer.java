@@ -3,6 +3,7 @@ package com.POD_Final.app.back.query_1;
 import com.hazelcast.mapreduce.Reducer;
 import com.hazelcast.mapreduce.ReducerFactory;
 
+/* Reducer for the 1st query */
 public class ActorsReducer implements ReducerFactory<String, Integer, Integer> {
 
     @Override

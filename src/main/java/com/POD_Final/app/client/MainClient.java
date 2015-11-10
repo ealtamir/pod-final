@@ -2,27 +2,15 @@ package com.POD_Final.app.client;
 
 import com.POD_Final.app.back.QueryFactory;
 import com.POD_Final.app.back.QueryInterface;
-import com.POD_Final.app.back.query_1.ActorVote;
-import com.POD_Final.app.back.query_1.ActorsCollator;
-import com.POD_Final.app.back.query_1.ActorsReducer;
-import com.POD_Final.app.back.query_1.CustomMapper;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientNetworkConfig;
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.ICompletableFuture;
 import com.hazelcast.core.IMap;
-import com.hazelcast.mapreduce.Job;
-import com.hazelcast.mapreduce.JobTracker;
-import com.hazelcast.mapreduce.KeyValueSource;
-import com.hazelcast.query.SqlPredicate;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Enzo on 08.11.15.

@@ -31,7 +31,7 @@ public class ActorVotesQuery implements QueryInterface {
         Job<String, Movie> job = tracker.newJob(source);
 
         ICompletableFuture<List<ActorVote>> future = job
-                .mapper(new CustomMapper())
+                .mapper(new ActorsMapper())
                 .reducer(new ActorsReducer())
                 .submit(new ActorsCollator(query));
 
