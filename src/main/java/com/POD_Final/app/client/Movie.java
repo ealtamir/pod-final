@@ -1,9 +1,11 @@
 package com.POD_Final.app.client;
 
+import java.io.Serializable;
+
 /**
  * Created by Enzo on 08.11.15.
  */
-public class Movie {
+public class Movie implements Serializable {
 
     static enum Type {
         MOVIE, SERIES

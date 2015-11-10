@@ -3,6 +3,7 @@ package com.POD_Final.app.client;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
+import com.hazelcast.core.IMap;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +18,25 @@ public class CustomJSONParser {
 
     public CustomJSONParser(File file) {
         jsonFile = file;
+    }
+
+    public IMap<String, Movie> parseJSON(IMap<String, Movie> map) throws IOException {
+        String field = null;
+        Movie movie = null;
+        JsonFactory jsonFactory = new JsonFactory();
+        JsonParser parser = jsonFactory.createJsonParser(jsonFile);
+        JsonToken token = parser.nextToken();
+        while(parser.nextToken() != JsonToken.END_ARRAY) {
+            movie = new Movie();
+            while(parser.nextToken() != JsonToken.END_OBJECT) {
+                field = parser.getCurrentName().toLowerCase();
+                parser.nextToken();
+                processField(field, parser, movie);
+            }
+            map.put(movie.getTitle(), movie);
+        }
+        parser.close();
+        return map;
     }
 
     public ArrayList<Movie> parseJSON() throws IOException {
