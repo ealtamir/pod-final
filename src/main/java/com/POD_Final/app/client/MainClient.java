@@ -1,7 +1,11 @@
 package com.POD_Final.app.client;
 
-import com.POD_Final.app.back.ActorsReducer;
-import com.POD_Final.app.back.CustomMapper;
+import com.POD_Final.app.back.QueryFactory;
+import com.POD_Final.app.back.QueryInterface;
+import com.POD_Final.app.back.query_1.ActorVote;
+import com.POD_Final.app.back.query_1.ActorsCollator;
+import com.POD_Final.app.back.query_1.ActorsReducer;
+import com.POD_Final.app.back.query_1.CustomMapper;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.ClientNetworkConfig;
@@ -11,12 +15,11 @@ import com.hazelcast.core.IMap;
 import com.hazelcast.mapreduce.Job;
 import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
+import com.hazelcast.query.SqlPredicate;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.rmi.server.ExportException;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
@@ -47,32 +50,8 @@ public class MainClient {
             return;
         }
 
-        JobTracker tracker = client.getJobTracker("default");
-
-        KeyValueSource<String, Movie> source = KeyValueSource.fromMap(map);
-        Job<String, Movie> job = tracker.newJob(source);
-
-        ICompletableFuture<Map<String, Integer>> future = job
-                .mapper(new CustomMapper())
-                .reducer(new ActorsReducer())
-                .submit();
-
-        Map<String, Integer> result = null;
-        try {
-            result = future.get();
-        } catch (InterruptedException e) {
-            System.out.println("ERROR: Task was interrupted. Aborting...");
-            System.exit(1);
-        } catch (ExecutionException e) {
-            System.out.println("ERROR: There was a problem with the execution of your query. Please try again.");
-            e.printStackTrace();
-            System.exit(1);
-        }
-
-        for (Map.Entry<String, Integer> e : result.entrySet())
-        {
-            System.out.println(String.format("Actor: %s, votos: %d", e.getKey(), e.getValue() ));
-        }
+        QueryInterface queryObject = QueryFactory.getQueryObject(query);
+        queryObject.executeQuery(map, client);
         System.exit(0);
     }
 

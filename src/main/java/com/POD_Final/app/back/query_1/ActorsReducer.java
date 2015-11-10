@@ -1,4 +1,4 @@
-package com.POD_Final.app.back;
+package com.POD_Final.app.back.query_1;
 
 import com.hazelcast.mapreduce.Reducer;
 import com.hazelcast.mapreduce.ReducerFactory;
