@@ -25,7 +25,7 @@ public class CustomJSONParser {
         Movie movie = null;
         JsonFactory jsonFactory = new JsonFactory();
         JsonParser parser = jsonFactory.createJsonParser(jsonFile);
-        JsonToken token = parser.nextToken();
+
         while(parser.nextToken() != JsonToken.END_ARRAY) {
             movie = new Movie();
             while(parser.nextToken() != JsonToken.END_OBJECT) {
@@ -35,6 +35,7 @@ public class CustomJSONParser {
             }
             map.put(movie.getTitle(), movie);
         }
+
         parser.close();
         return map;
     }
@@ -45,7 +46,7 @@ public class CustomJSONParser {
         ArrayList<Movie> movieList = new ArrayList<Movie>();
         JsonFactory jsonFactory = new JsonFactory();
         JsonParser parser = jsonFactory.createJsonParser(jsonFile);
-        JsonToken token = parser.nextToken();
+
         while(parser.nextToken() != JsonToken.END_ARRAY) {
             movie = new Movie();
             while(parser.nextToken() != JsonToken.END_OBJECT) {
@@ -55,6 +56,7 @@ public class CustomJSONParser {
             }
             movieList.add(movie);
         }
+
         parser.close();
         return movieList;
     }
@@ -103,6 +105,5 @@ public class CustomJSONParser {
         } else if(field.equals("type")) {
             movie.setType(parser.getText());
         }
-
     }
 }
