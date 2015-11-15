@@ -3,7 +3,7 @@ package com.POD_Final.app.back.query_4;
 import java.io.Serializable;
 
 /* Helper for the 4th query */
-public class ActorWrapper implements Serializable {
+public class ActorWrapper implements Serializable, Comparable<ActorWrapper> {
 
     private final String actorName;
     private final int timesActed;
@@ -39,5 +39,10 @@ public class ActorWrapper implements Serializable {
 
     public String getActorName() {
         return actorName;
+    }
+
+    @Override
+    public int compareTo(ActorWrapper o) {
+        return actorName.compareTo(o.getActorName());
     }
 }
