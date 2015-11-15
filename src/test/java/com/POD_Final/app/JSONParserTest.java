@@ -54,10 +54,9 @@ public class JSONParserTest {
             e.printStackTrace();
         }
 
-        Movie movie = movieList.get(38);
+        Movie movie = movieList.get(movieList.size() - 1);
 
-        Assert.assertEquals(movieList.size(), 39);
-        Assert.assertEquals(movie.getTitle(), "Bonanza");
+        Assert.assertEquals(movie.getTitle(), "300: Rise of an Empire");
     }
 
     @Test

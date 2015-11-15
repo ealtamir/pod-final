@@ -37,7 +37,9 @@ public class CustomJSONParser {
                 parser.nextToken();
                 processField(field, parser, movie);
             }
-            map.put(movie.getTitle(), movie);
+            if (movie.getType() != Movie.Type.SERIES) {
+                map.put(movie.getTitle(), movie);
+            }
         }
 
         parser.close();
@@ -62,7 +64,9 @@ public class CustomJSONParser {
                 parser.nextToken();
                 processField(field, parser, movie);
             }
-            movieList.add(movie);
+            if (movie.getType() != Movie.Type.SERIES) {
+                movieList.add(movie);
+            }
         }
 
         parser.close();
