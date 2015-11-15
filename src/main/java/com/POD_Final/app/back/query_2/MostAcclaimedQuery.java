@@ -1,5 +1,6 @@
 package com.POD_Final.app.back.query_2;
 
+import com.POD_Final.app.back.AbstractQuery;
 import com.POD_Final.app.back.QueryInterface;
 import com.POD_Final.app.client.Movie;
 import com.POD_Final.app.client.Query;
@@ -18,7 +19,7 @@ import java.util.concurrent.ExecutionException;
 /**
  * Created by Enzo on 15.11.15.
  */
-public class MostAcclaimedQuery implements QueryInterface {
+public class MostAcclaimedQuery extends AbstractQuery<Map<Integer, PriorityQueue<Movie>>> {
 
     private final Query query;
 
@@ -27,29 +28,7 @@ public class MostAcclaimedQuery implements QueryInterface {
     }
 
     @Override
-    public void executeQuery(IMap<String, Movie> map, HazelcastInstance client) {
-        JobTracker tracker = client.getJobTracker("default");
-        KeyValueSource<String, Movie> source = KeyValueSource.fromMap(map);
-        Job<String, Movie> job = tracker.newJob(source);
-
-        JobCompletableFuture<Map<Integer, PriorityQueue<Movie>>> future = job
-                .mapper(new MostAcclaimedMapper(query.getTope()))
-                .reducer(new MostAcclaimedReducer())
-                .submit();
-
-        Map<Integer, PriorityQueue<Movie>> result = null;
-
-        try {
-            result = future.get();
-        } catch (InterruptedException e) {
-            System.out.println("ERROR: Task was interrupted. Aborting...");
-            System.exit(1);
-        } catch (ExecutionException e) {
-            System.out.println("ERROR: There was a problem with the execution of your query. Please try again.");
-            e.printStackTrace();
-            System.exit(1);
-        }
-
+    protected void processResult(Map<Integer, PriorityQueue<Movie>> result) {
         for (Map.Entry<Integer, PriorityQueue<Movie>> entry : result.entrySet()) {
             int year = entry.getKey();
             PriorityQueue<Movie> movies = entry.getValue();
@@ -58,6 +37,12 @@ public class MostAcclaimedQuery implements QueryInterface {
                 System.out.println(String.format("\t%s", movie.getTitle()));
             }
         }
+    }
 
+    @Override
+    protected JobCompletableFuture<Map<Integer, PriorityQueue<Movie>>> getFuture(Job<String, Movie> job) {
+        return job.mapper(new MostAcclaimedMapper(query.getTope()))
+                .reducer(new MostAcclaimedReducer())
+                .submit();
     }
 }

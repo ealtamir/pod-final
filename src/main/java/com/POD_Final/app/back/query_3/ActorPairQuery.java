@@ -1,5 +1,6 @@
 package com.POD_Final.app.back.query_3;
 
+import com.POD_Final.app.back.AbstractQuery;
 import com.POD_Final.app.back.QueryInterface;
 import com.POD_Final.app.client.Movie;
 import com.POD_Final.app.client.Query;
@@ -19,7 +20,7 @@ import java.util.concurrent.ExecutionException;
 /**
  * Created by Enzo on 15.11.15.
  */
-public class ActorPairQuery implements QueryInterface {
+public class ActorPairQuery extends AbstractQuery<Map<ActorPair, ArrayList>> {
 
     private final Query query;
 
@@ -28,28 +29,7 @@ public class ActorPairQuery implements QueryInterface {
     }
 
     @Override
-    public void executeQuery(IMap<String, Movie> map, HazelcastInstance client) {
-        JobTracker tracker = client.getJobTracker("default");
-        KeyValueSource<String, Movie> source = KeyValueSource.fromMap(map);
-        Job<String, Movie> job = tracker.newJob(source);
-
-        JobCompletableFuture<Map<ActorPair, ArrayList>> future = job
-                .mapper(new ActorPairMapper())
-                .reducer(new ActorPairReducer())
-                .submit();
-
-        Map<ActorPair, ArrayList> result = null;
-
-        try {
-            result = future.get();
-        } catch (InterruptedException e) {
-            System.out.println("ERROR: Task was interrupted. Aborting...");
-            System.exit(1);
-        } catch (ExecutionException e) {
-            System.out.println("ERROR: There was a problem with the execution of your query. Please try again.");
-            System.exit(1);
-        }
-
+    protected void processResult(Map<ActorPair, ArrayList> result) {
         for (Map.Entry<ActorPair, ArrayList> entry : result.entrySet()) {
             ActorPair pair = entry.getKey();
             ArrayList<String> movies = entry.getValue();
@@ -59,6 +39,12 @@ public class ActorPairQuery implements QueryInterface {
                 System.out.println(String.format("\t%s", title));
             }
         }
+    }
 
+    @Override
+    protected JobCompletableFuture<Map<ActorPair, ArrayList>> getFuture(Job<String, Movie> job) {
+        return job.mapper(new ActorPairMapper())
+                .reducer(new ActorPairReducer())
+                .submit();
     }
 }
