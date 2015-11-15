@@ -4,8 +4,9 @@ import java.io.Serializable;
 
 /* Helper for the 4th query */
 public class ActorWrapper implements Serializable {
-    private String actorName;
-    private int timesActed;
+
+    private final String actorName;
+    private final int timesActed;
 
     public ActorWrapper(String actorName, int timesActed) {
         this.actorName = actorName;
