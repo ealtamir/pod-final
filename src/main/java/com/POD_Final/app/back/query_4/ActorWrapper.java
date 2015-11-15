@@ -2,8 +2,8 @@ package com.POD_Final.app.back.query_4;
 
 /* Helper for the 4th query */
 public class ActorWrapper {
-    private String actorName;
-    private int timesActed;
+    private final String actorName;
+    private final int timesActed;
 
     public ActorWrapper(String actorName, int timesActed) {
         this.actorName = actorName;

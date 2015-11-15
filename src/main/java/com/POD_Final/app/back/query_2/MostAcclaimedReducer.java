@@ -4,10 +4,8 @@ import com.POD_Final.app.client.Movie;
 import com.hazelcast.mapreduce.Reducer;
 import com.hazelcast.mapreduce.ReducerFactory;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.Comparator;
-import java.util.List;
 import java.util.PriorityQueue;
 
 /* Reducer for the 2nd query */
@@ -19,16 +17,7 @@ public class MostAcclaimedReducer implements ReducerFactory<Integer, Movie, Prio
             private PriorityQueue<Movie> mostAcclaimedMovies;
 
             public void beginReduce() {
-                mostAcclaimedMovies = new PriorityQueue<Movie>(new Comparator<Movie>() {
-                    @Override
-                    public int compare(Movie o1, Movie o2) {
-                        if(o1.getMetascore() < o2.getMetascore())
-                            return -1;
-                        if(o1.getMetascore() > o2.getMetascore())
-                            return 1;
-                        return 0;
-                    }
-                });
+                mostAcclaimedMovies = new PriorityQueue<Movie>(new CustomComparator());
             }
 
             @Override
@@ -48,6 +37,17 @@ public class MostAcclaimedReducer implements ReducerFactory<Integer, Movie, Prio
             @Override
             public PriorityQueue<Movie> finalizeReduce() {
                 return mostAcclaimedMovies;
+            }
+
+            class CustomComparator implements Comparator<Movie>, Serializable{
+                @Override
+                public int compare(Movie o1, Movie o2) {
+                    if(o1.getTitle().compareTo(o2.getTitle()) < 0)
+                        return -1;
+                    if(o1.getTitle().compareTo(o2.getTitle()) > 0)
+                        return 1;
+                    return 0;
+                }
             }
         };
     }
