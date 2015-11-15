@@ -31,7 +31,8 @@ public class MainClient {
         CustomJSONParser parser = new CustomJSONParser(query.getDataFilePath());
         IMap<String, Movie> map = null;
         try {
-            map = parser.parseJSON(client.getMap(MAP_NAME));
+            map = client.getMap(MAP_NAME);
+            map = parser.parseJSON(map);
         } catch(IOException e) {
             System.out.println("ERROR: Unable to obtain IMap from Hazelcast.");
             return;

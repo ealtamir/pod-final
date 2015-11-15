@@ -33,7 +33,7 @@ public class MostAcclaimedQuery implements QueryInterface {
         Job<String, Movie> job = tracker.newJob(source);
 
         JobCompletableFuture<Map<Integer, PriorityQueue<Movie>>> future = job
-                .mapper(new MostAcclaimedMapper())
+                .mapper(new MostAcclaimedMapper(query.getTope()))
                 .reducer(new MostAcclaimedReducer())
                 .submit();
 
