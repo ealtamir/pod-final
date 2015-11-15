@@ -46,6 +46,7 @@ public class MostAcclaimedQuery implements QueryInterface {
             System.exit(1);
         } catch (ExecutionException e) {
             System.out.println("ERROR: There was a problem with the execution of your query. Please try again.");
+            e.printStackTrace();
             System.exit(1);
         }
 
