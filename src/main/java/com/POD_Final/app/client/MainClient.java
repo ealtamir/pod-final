@@ -34,7 +34,6 @@ public class MainClient {
             map = parser.parseJSON(client.getMap(MAP_NAME));
         } catch(IOException e) {
             System.out.println("ERROR: Unable to obtain IMap from Hazelcast.");
-            e.printStackTrace();
             return;
         }
 

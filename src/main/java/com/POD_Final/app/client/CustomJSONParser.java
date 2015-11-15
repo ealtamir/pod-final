@@ -20,11 +20,15 @@ public class CustomJSONParser {
         jsonFile = file;
     }
 
+    @SuppressWarnings("deprecation")
     public IMap<String, Movie> parseJSON(IMap<String, Movie> map) throws IOException {
         String field = null;
         Movie movie = null;
         JsonFactory jsonFactory = new JsonFactory();
         JsonParser parser = jsonFactory.createJsonParser(jsonFile);
+
+        // Consumes one token to set the order straight
+        parser.nextToken();
 
         while(parser.nextToken() != JsonToken.END_ARRAY) {
             movie = new Movie();
@@ -40,6 +44,7 @@ public class CustomJSONParser {
         return map;
     }
 
+    @SuppressWarnings("deprecation")
     public ArrayList<Movie> parseJSON() throws IOException {
         String field = null;
         Movie movie = null;

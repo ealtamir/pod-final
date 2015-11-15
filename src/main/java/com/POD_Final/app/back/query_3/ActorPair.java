@@ -1,7 +1,9 @@
 package com.POD_Final.app.back.query_3;
 
+import java.io.Serializable;
+
 /* Helper for the 3rd query */
-public class ActorPair {
+public class ActorPair implements Serializable {
     private String actorName1;
     private String actorName2;
 
@@ -34,5 +36,13 @@ public class ActorPair {
         int result = actorName1.hashCode();
         result = 31 * result + actorName2.hashCode();
         return result;
+    }
+
+    public String getFirstActorName() {
+        return actorName1;
+    }
+
+    public String getSecondActorName() {
+        return actorName2;
     }
 }
