@@ -3,6 +3,7 @@ package com.POD_Final.app.back;
 import com.POD_Final.app.back.query_1.ActorVotesQuery;
 import com.POD_Final.app.back.query_2.MostAcclaimedQuery;
 import com.POD_Final.app.back.query_3.ActorPairQuery;
+import com.POD_Final.app.back.query_4.DirectorActorQuery;
 import com.POD_Final.app.client.Query;
 
 /**
@@ -18,7 +19,7 @@ public class QueryFactory {
         } else if (query.getQueryNum() == 3) {
             return new ActorPairQuery(query);
         } else {
-            return null;
+            return new DirectorActorQuery(query);
         }
     }
 }

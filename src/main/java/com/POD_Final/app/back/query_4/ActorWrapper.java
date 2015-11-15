@@ -1,7 +1,9 @@
 package com.POD_Final.app.back.query_4;
 
+import java.io.Serializable;
+
 /* Helper for the 4th query */
-public class ActorWrapper {
+public class ActorWrapper implements Serializable {
     private String actorName;
     private int timesActed;
 
@@ -32,5 +34,9 @@ public class ActorWrapper {
 
     public int getTimesActed(){
         return timesActed;
+    }
+
+    public String getActorName() {
+        return actorName;
     }
 }
