@@ -12,6 +12,7 @@ import com.hazelcast.mapreduce.JobCompletableFuture;
 import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.concurrent.ExecutionException;
@@ -19,7 +20,7 @@ import java.util.concurrent.ExecutionException;
 /**
  * Created by Enzo on 15.11.15.
  */
-public class MostAcclaimedQuery extends AbstractQuery<Map<Integer, PriorityQueue<Movie>>> {
+public class MostAcclaimedQuery extends AbstractQuery<Map<Integer, ArrayList<Movie>>> {
 
     private final Query query;
 
@@ -28,11 +29,11 @@ public class MostAcclaimedQuery extends AbstractQuery<Map<Integer, PriorityQueue
     }
 
     @Override
-    protected void processResult(Map<Integer, PriorityQueue<Movie>> result) {
-        for (Map.Entry<Integer, PriorityQueue<Movie>> entry : result.entrySet()) {
+    protected void processResult(Map<Integer, ArrayList<Movie>> result) {
+        for (Map.Entry<Integer, ArrayList<Movie>> entry : result.entrySet()) {
             int year = entry.getKey();
-            PriorityQueue<Movie> movies = entry.getValue();
-            System.out.println("Year: " + String.valueOf(year));
+            ArrayList<Movie> movies = entry.getValue();
+            System.out.println(String.valueOf(year));
             for (Movie movie : movies) {
                 System.out.println(String.format("\t%s", movie.getTitle()));
             }
@@ -40,7 +41,7 @@ public class MostAcclaimedQuery extends AbstractQuery<Map<Integer, PriorityQueue
     }
 
     @Override
-    protected JobCompletableFuture<Map<Integer, PriorityQueue<Movie>>> getFuture(Job<String, Movie> job) {
+    protected JobCompletableFuture<Map<Integer, ArrayList<Movie>>> getFuture(Job<String, Movie> job) {
         return job.mapper(new MostAcclaimedMapper(query.getTope()))
                 .reducer(new MostAcclaimedReducer())
                 .submit();
