@@ -10,6 +10,7 @@ import com.hazelcast.mapreduce.JobCompletableFuture;
 import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.concurrent.ExecutionException;
@@ -31,12 +32,12 @@ public class DirectorActorQuery implements QueryInterface {
         KeyValueSource<String, Movie> source = KeyValueSource.fromMap(map);
         Job<String, Movie> job = tracker.newJob(source);
 
-        JobCompletableFuture<Map<String, PriorityQueue<ActorWrapper>>> future = job
+        JobCompletableFuture<Map<String, ArrayList<ActorWrapper>>> future = job
                 .mapper(new DirectorActorMapper())
                 .reducer(new DirectorActorReducer())
                 .submit();
 
-        Map<String, PriorityQueue<ActorWrapper>> result = null;
+        Map<String, ArrayList<ActorWrapper>> result = null;
 
         try {
             result = future.get();
@@ -48,12 +49,12 @@ public class DirectorActorQuery implements QueryInterface {
             e.printStackTrace();
             System.exit(1);
         }
-        for (Map.Entry<String, PriorityQueue<ActorWrapper>> entry : result.entrySet()) {
+        for (Map.Entry<String, ArrayList<ActorWrapper>> entry : result.entrySet()) {
             String directorName = entry.getKey();
-            PriorityQueue<ActorWrapper> queue = entry.getValue();
+            ArrayList<ActorWrapper> queue = entry.getValue();
             System.out.println("Director: " + directorName);
             for (ActorWrapper wrapper : queue) {
-                System.out.println(String.format("\t %s", wrapper.getActorName()));
+                System.out.println(String.format("\t %s %d", wrapper.getActorName(), wrapper.getTimesActed()));
             }
         }
 
