@@ -9,6 +9,6 @@ import com.hazelcast.core.IMap;
  */
 public interface QueryInterface {
 
-    public void executeQuery(IMap<String, Movie> map, HazelcastInstance client);
+    public long[] executeQuery(IMap<String, Movie> map, HazelcastInstance client);
 
 }

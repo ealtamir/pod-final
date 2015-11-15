@@ -10,6 +10,8 @@ import com.hazelcast.core.IMap;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Properties;
 
 /**
@@ -30,16 +32,24 @@ public class MainClient {
         HazelcastInstance client = obtainHazelcastClient();
         CustomJSONParser parser = new CustomJSONParser(query.getDataFilePath());
         IMap<String, Movie> map = null;
+        long[] readingTimes = new long[2];
         try {
             map = client.getMap(MAP_NAME);
+            readingTimes[0] = System.currentTimeMillis();
             map = parser.parseJSON(map);
+            readingTimes[1] = System.currentTimeMillis();
         } catch(IOException e) {
             System.out.println("ERROR: Unable to obtain IMap from Hazelcast.");
             return;
         }
 
         QueryInterface queryObject = QueryFactory.getQueryObject(query);
-        queryObject.executeQuery(map, client);
+        long[] mapReduceTimes = queryObject.executeQuery(map, client);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss:SSSS");
+        System.out.println(sdf.format(new Date(readingTimes[0])));
+        System.out.println(sdf.format(new Date(readingTimes[1])));
+        System.out.println(sdf.format(new Date(mapReduceTimes[0])));
+        System.out.println(sdf.format(new Date(mapReduceTimes[1])));
         System.exit(0);
     }
 
