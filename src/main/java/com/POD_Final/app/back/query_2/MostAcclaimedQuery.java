@@ -11,6 +11,7 @@ import com.hazelcast.mapreduce.JobCompletableFuture;
 import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.concurrent.ExecutionException;
@@ -32,12 +33,12 @@ public class MostAcclaimedQuery implements QueryInterface {
         KeyValueSource<String, Movie> source = KeyValueSource.fromMap(map);
         Job<String, Movie> job = tracker.newJob(source);
 
-        JobCompletableFuture<Map<Integer, PriorityQueue<Movie>>> future = job
+        JobCompletableFuture<Map<Integer, ArrayList<Movie>>> future = job
                 .mapper(new MostAcclaimedMapper(query.getTope()))
                 .reducer(new MostAcclaimedReducer())
                 .submit();
 
-        Map<Integer, PriorityQueue<Movie>> result = null;
+        Map<Integer, ArrayList<Movie>> result = null;
 
         try {
             result = future.get();
@@ -50,9 +51,9 @@ public class MostAcclaimedQuery implements QueryInterface {
             System.exit(1);
         }
 
-        for (Map.Entry<Integer, PriorityQueue<Movie>> entry : result.entrySet()) {
+        for (Map.Entry<Integer, ArrayList<Movie>> entry : result.entrySet()) {
             int year = entry.getKey();
-            PriorityQueue<Movie> movies = entry.getValue();
+            ArrayList<Movie> movies = entry.getValue();
             System.out.println("Year: " + String.valueOf(year));
             for (Movie movie : movies) {
                 System.out.println(String.format("\t%s", movie.getTitle()));
