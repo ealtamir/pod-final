@@ -1,4 +1,4 @@
-package com.POD_Final.app.back;
+package com.POD_Final.app.back.query_3;
 
 /* Helper for the 3rd query */
 public class ActorPair {

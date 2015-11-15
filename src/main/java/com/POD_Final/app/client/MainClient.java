@@ -17,14 +17,14 @@ import java.util.Properties;
  */
 public class MainClient {
 
-    static private final int QUERY = 0;
-    static private final int VALUE = 1;
+    private static final int QUERY = 0;
+    private static final int VALUE = 1;
 
-    static private final String MAP_NAME = "query1";
+    private static final String MAP_NAME = "query1";
 
     public static void main(String[] args) {
         Query query = parseQuery(args);
-        if (query == null) {
+        if(query == null) {
             return;
         }
         HazelcastInstance client = obtainHazelcastClient();
@@ -32,7 +32,7 @@ public class MainClient {
         IMap<String, Movie> map = null;
         try {
             map = parser.parseJSON(client.getMap(MAP_NAME));
-        } catch (IOException e) {
+        } catch(IOException e) {
             System.out.println("ERROR: Unable to obtain IMap from Hazelcast.");
             e.printStackTrace();
             return;
@@ -50,7 +50,7 @@ public class MainClient {
         try {
             input = MainClient.class.getClassLoader().getResourceAsStream("params.properties");
             properties.load(input);
-        } catch (Exception e) {
+        } catch(Exception e) {
             System.out.println("Properties file not found.");
             e.printStackTrace();
             return null;
@@ -64,13 +64,13 @@ public class MainClient {
         ClientConfig ccfg = new ClientConfig();
         ccfg.getGroupConfig().setName(name).setPassword(pass);
 
-        String[] arrayAddresses= addresses.split("[,;]");
-        ClientNetworkConfig net= new ClientNetworkConfig();
+        String[] arrayAddresses = addresses.split("[,;]");
+        ClientNetworkConfig net = new ClientNetworkConfig();
         net.addAddress(arrayAddresses);
         ccfg.setNetworkConfig(net);
 
         System.out.println(String.format("Conectándose a la red %s con password [%s]", name, pass));
-        HazelcastInstance client =  HazelcastClient.newHazelcastClient(ccfg);
+        HazelcastInstance client = HazelcastClient.newHazelcastClient(ccfg);
 
         System.out.println(client.getCluster());
         return client;
@@ -80,13 +80,13 @@ public class MainClient {
         Query query = new Query();
         String[] parts;
         String paramName, paramVal;
-        for (String param : args) {
+        for(String param : args) {
             parts = param.split("=");
             paramName = parts[QUERY].trim();
             paramVal = parts[VALUE].trim();
             try {
                 query.setQueryParam(paramName, paramVal);
-            } catch (IllegalArgumentException e) {
+            } catch(IllegalArgumentException e) {
                 System.out.println("\nSe encontró un problema durante el parseo. Terminando ejecución.");
                 query = null;
                 break;
@@ -94,5 +94,4 @@ public class MainClient {
         }
         return query;
     }
-
 }
