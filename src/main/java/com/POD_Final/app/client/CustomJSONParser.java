@@ -47,6 +47,9 @@ public class CustomJSONParser {
         JsonFactory jsonFactory = new JsonFactory();
         JsonParser parser = jsonFactory.createJsonParser(jsonFile);
 
+        // Consumes one token to set the order straight
+        parser.nextToken();
+
         while(parser.nextToken() != JsonToken.END_ARRAY) {
             movie = new Movie();
             while(parser.nextToken() != JsonToken.END_OBJECT) {
