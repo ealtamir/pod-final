@@ -13,11 +13,13 @@ import java.util.concurrent.ExecutionException;
 abstract public class AbstractQuery<T> implements QueryInterface {
 
     @Override
-    public void executeQuery(IMap<String, Movie> map, HazelcastInstance client) {
+    public long[] executeQuery(IMap<String, Movie> map, HazelcastInstance client) {
         JobTracker tracker = client.getJobTracker("default");
         KeyValueSource<String, Movie> source = KeyValueSource.fromMap(map);
         Job<String, Movie> job = tracker.newJob(source);
 
+        long[] benchmarkTimes = new long[2];
+        benchmarkTimes[0] = System.currentTimeMillis();
         JobCompletableFuture<T> future = getFuture(job);
 
         T result = null;
@@ -33,6 +35,8 @@ abstract public class AbstractQuery<T> implements QueryInterface {
         }
 
         processResult(result);
+        benchmarkTimes[1] = System.currentTimeMillis();
+        return benchmarkTimes;
     }
 
     protected abstract void processResult(T result);
