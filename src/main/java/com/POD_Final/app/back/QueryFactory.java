@@ -1,6 +1,8 @@
 package com.POD_Final.app.back;
 
 import com.POD_Final.app.back.query_1.ActorVotesQuery;
+import com.POD_Final.app.back.query_2.MostAcclaimedQuery;
+import com.POD_Final.app.back.query_3.ActorPairQuery;
 import com.POD_Final.app.client.Query;
 
 /**
@@ -12,9 +14,9 @@ public class QueryFactory {
         if (query.getQueryNum() == 1) {
             return new ActorVotesQuery(query);
         } else if (query.getQueryNum() == 2) {
-            return null;
+            return new MostAcclaimedQuery(query);
         } else if (query.getQueryNum() == 3) {
-            return null;
+            return new ActorPairQuery(query);
         } else {
             return null;
         }
