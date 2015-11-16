@@ -20,7 +20,7 @@ import java.util.concurrent.ExecutionException;
 /**
  * Created by Enzo on 15.11.15.
  */
-public class ActorPairQuery extends AbstractQuery<Map<ActorPair, ArrayList>> {
+public class ActorPairQuery extends AbstractQuery<List<ActorPairWithMovies>> {
 
     private final Query query;
 
@@ -29,22 +29,24 @@ public class ActorPairQuery extends AbstractQuery<Map<ActorPair, ArrayList>> {
     }
 
     @Override
-    protected void processResult(Map<ActorPair, ArrayList> result) {
-        for (Map.Entry<ActorPair, ArrayList> entry : result.entrySet()) {
-            ActorPair pair = entry.getKey();
-            ArrayList<String> movies = entry.getValue();
+    protected void processResult(List<ActorPairWithMovies> result) {
+        ActorPair actorPair;
 
-            System.out.println(String.format("%s - %s", pair.getFirstActorName(), pair.getSecondActorName()));
-            for (String title : movies) {
+        for(ActorPairWithMovies apwm : result) {
+            actorPair = apwm.getActorPair();
+
+            System.out.println(String.format("%s - %s", actorPair.getFirstActorName(), actorPair.getSecondActorName()));
+            for(String title : apwm.getMovies()) {
                 System.out.println(String.format("\t%s", title));
             }
         }
     }
 
     @Override
-    protected JobCompletableFuture<Map<ActorPair, ArrayList>> getFuture(Job<String, Movie> job) {
+    protected JobCompletableFuture<List<ActorPairWithMovies>> getFuture(Job<String, Movie> job) {
         return job.mapper(new ActorPairMapper())
                 .reducer(new ActorPairReducer())
-                .submit();
+                .submit(new ActorPairCollator());
+
     }
 }

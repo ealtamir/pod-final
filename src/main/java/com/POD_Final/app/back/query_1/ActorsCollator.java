@@ -21,11 +21,16 @@ public class ActorsCollator implements Collator<Map.Entry<String, Integer>, List
         PriorityQueue<ActorVote> queue = new PriorityQueue<ActorVote>(new Comparator<ActorVote>() {
             @Override
             public int compare(ActorVote o1, ActorVote o2) {
-                if (o1.votes > o2.votes) {
+                if (o1.votes > o2.votes)
                     return -1;
-                } else if (o1.votes < o2.votes) {
+                if (o1.votes < o2.votes)
                     return 1;
-                }
+
+                if(o1.name.compareTo(o2.name) < 0)
+                    return -1;
+                if(o1.name.compareTo(o2.name) > 0)
+                    return 1;
+
                 return 0;
             }
         });
