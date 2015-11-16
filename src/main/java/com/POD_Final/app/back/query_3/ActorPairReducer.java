@@ -5,11 +5,11 @@ import com.hazelcast.mapreduce.ReducerFactory;
 
 import java.util.ArrayList;
 
-public class ActorPairReducer implements ReducerFactory<ActorPair, String, ArrayList>{
+public class ActorPairReducer implements ReducerFactory<ActorPair, String, ArrayList<String>> {
 
     @Override
-    public Reducer<String, ArrayList> newReducer(final ActorPair actorPair) {
-        return new Reducer<String, ArrayList>() {
+    public Reducer<String, ArrayList<String>> newReducer(final ActorPair actorPair) {
+        return new Reducer<String, ArrayList<String>>() {
             private ArrayList<String> movieTitles;
 
             public void beginReduce() {
@@ -22,7 +22,7 @@ public class ActorPairReducer implements ReducerFactory<ActorPair, String, Array
             }
 
             @Override
-            public ArrayList finalizeReduce() {
+            public ArrayList<String> finalizeReduce() {
                 return movieTitles;
             }
         };

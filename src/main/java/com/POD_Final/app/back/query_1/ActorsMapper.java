@@ -6,11 +6,6 @@ import com.hazelcast.mapreduce.Mapper;
 
 /* Mapper for the 1st query */
 public class ActorsMapper implements Mapper<String, Movie, String, Integer> {
-    /* inputKey: nombre de la película */
-    /* inputValue: Movie */
-    /* outputKey: actor name */
-    /* outputValue: movie votes */
-
     @Override
     public void map(String s, Movie movie, Context<String, Integer> context) {
         for(String actorName : movie.getActors()) {
