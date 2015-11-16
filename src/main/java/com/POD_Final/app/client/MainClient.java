@@ -45,11 +45,7 @@ public class MainClient {
 
         QueryInterface queryObject = QueryFactory.getQueryObject(query);
         long[] mapReduceTimes = queryObject.executeQuery(map, client);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss:SSSS");
-        System.out.println(sdf.format(new Date(readingTimes[0])));
-        System.out.println(sdf.format(new Date(readingTimes[1])));
-        System.out.println(sdf.format(new Date(mapReduceTimes[0])));
-        System.out.println(sdf.format(new Date(mapReduceTimes[1])));
+        printTimestamps(readingTimes, mapReduceTimes);
         System.exit(0);
     }
 
@@ -104,4 +100,21 @@ public class MainClient {
         }
         return query;
     }
+
+    private static void printTimestamps(long[] readingTimes, long[] mapReduceTimes) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss:SSSS");
+
+        String str = "\n\n>>>>>>> INICIO DE LECTURA DEL ARCHIVO" + "\n\t" + sdf.format(new Date(readingTimes[0]));
+        System.out.println(str);
+
+        str = "\n>>>>>>> FIN DE LECTURA DEL ARCHIVO" + "\n\t" + sdf.format(new Date(readingTimes[1]));
+        System.out.println(str);
+
+        str = "\n>>>>>>> INICIO DEL TRABAJO MAP/REDUCE" + "\n\t" + sdf.format(new Date(mapReduceTimes[0]));
+        System.out.println(str);
+
+        str = "\n>>>>>>> FIN DEL TRABAJO MAP/REDUCE" + "\n\t" + sdf.format(new Date(mapReduceTimes[1]));
+        System.out.println(str);
+    }
+
 }
