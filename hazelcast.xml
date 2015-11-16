@@ -62,7 +62,7 @@
                 <tag-value>hz-nodes</tag-value>
             </aws>
         </join>
-        <interfaces enabled="false">
+        <interfaces enabled="true">
             <interface>10.6.0.*</interface>
         </interfaces>
         <ssl enabled="false"/>
